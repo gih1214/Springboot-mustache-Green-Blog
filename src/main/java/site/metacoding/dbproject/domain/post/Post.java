@@ -11,6 +11,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import site.metacoding.dbproject.domain.user.User;
 
 // JPA 라이브러리는 Java(자바언어) Persistence(DB에 영구적인 저장) API(노출되어 있는 메서드=인터페이스)
@@ -19,6 +22,9 @@ import site.metacoding.dbproject.domain.user.User;
 // 2. 자바코드로 DB를 자동 생성해주는 기능 제공 - User
 // 3. ORM 제공!! - 이 부분 지금 몰라도 됨. - 이거해보자!! (Object Relation Mapping)
 
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
 @Entity
 public class Post {
     @Id
