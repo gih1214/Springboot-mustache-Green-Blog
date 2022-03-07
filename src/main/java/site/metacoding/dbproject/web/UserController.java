@@ -1,9 +1,11 @@
 package site.metacoding.dbproject.web;
 
-import javax.servlet.http.HttpServletRequest;
+import java.util.Optional;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,11 +19,13 @@ public class UserController {
 
     // 컴퍼지션 (의존성 연결) 컨이 레한테 의존하고 있어
     private UserRepository userRepository;
+    private HttpSession session;
 
     // DI 받는 코드!!
     // 적응되면 final + 롬북기능 사용하자
-    public UserController(UserRepository userRepository) {
+    public UserController(UserRepository userRepository, HttpSession session) {
         this.userRepository = userRepository;
+        this.session = session;
     }
 
     // 회원가입 페이지 (정적) - 로그인X
@@ -53,8 +57,7 @@ public class UserController {
     // 이유 : 주소에 패스워드를 남길 수 없으니까!!!
     // 로그인 수행 - 로그인X
     @PostMapping("/login")
-    public String login(HttpServletRequest request, User user) {
-        HttpSession session = request.getSession(); // 쿠키에 sessionId : 85
+    public String login(User user) {
 
         User userEntity = userRepository.mLogin(user.getUsername(), user.getPassword());
 
@@ -69,10 +72,37 @@ public class UserController {
         return "redirect:/"; // PostController 만들고 수정하자.
     }
 
+    // http://localhost:8080/user/1
     // 유저상세 페이지 (동적) - 로그인O
     @GetMapping("/user/{id}")
-    public String detail(@PathVariable Integer id) {
-        return "user/detail";
+    public String detail(@PathVariable Integer id, Model model) {
+
+        // 유효성 검사하기 (수십개...엄청 많음)
+        User principal = (User) session.getAttribute("principal");
+
+        // 1. 인증 체크
+        if (principal == null) { // 로그인 인증해야 접속 가능하게 하기
+            return "error/page1"; // 못 가게 해야됨
+        }
+
+        // 2. 권한 체크
+        if (principal.getId() != id) {
+            return "error/page1";
+        }
+
+        // 3. 핵심 로직
+        Optional<User> userOp = userRepository.findById(id); // user 정보
+
+        if (userOp.isPresent()) { // 박스 안에 선물이 있으면
+            User userEntity = userOp.get();
+            model.addAttribute("user", userEntity);
+            return "user/detail";
+        } else {
+            // 경고창 같은게 있으면 좋다. (해당페이지로 이동할 수 없습니다.)
+            return "error/page1"; // null이면 메인페이지로 리턴
+        }
+
+        // DB에 로그 남기기 (로그인 한 아이디)
     }
 
     // 유저수정 페이지 (동적) - 로그인O
