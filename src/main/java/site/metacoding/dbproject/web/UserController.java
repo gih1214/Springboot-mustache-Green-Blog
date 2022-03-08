@@ -64,12 +64,14 @@ public class UserController {
     public String loginForm(HttpServletRequest request, Model model) {
         // JSESSIONID=asidaisdjasdi1233;remember=ssar
         // request.getHeader("Cookie");
-        Cookie[] cookies = request.getCookies(); // JSessionID, remember 2개를 내부적으로 split 해주는 메서드
+        if (request.getCookies() != null) {
+            Cookie[] cookies = request.getCookies(); // jSessionId, remember 두개가 있음.
 
-        for (Cookie cookie : cookies) {
-            System.out.println("쿠키값 : " + cookie.getName());
-            if (cookie.getName().equals("remember")) {
-                model.addAttribute("remember", cookie.getValue());
+            for (Cookie cookie : cookies) {
+                System.out.println("쿠키값 : " + cookie.getName());
+                if (cookie.getName().equals("remember")) {
+                    model.addAttribute("remember", cookie.getValue());
+                }
             }
         }
         return "user/loginForm";
@@ -95,8 +97,10 @@ public class UserController {
             System.out.println("로그인 되었습니다");
             session.setAttribute("principal", userEntity);
 
-            if (user.getRemember().equals("on")) {
-                response.addHeader("Set-Cookie", "remember=" + userEntity.getUsername());
+            if (user.getRemember() != null && user.getRemember().equals("on")) {
+                response.addHeader("Set-Cookie", "remember=" + user.getUsername());
+                // response.addHeader(name, value);
+                // response.addCookie(cookie);
             }
         }
         return "redirect:/"; // PostController 만들고 수정하자.
