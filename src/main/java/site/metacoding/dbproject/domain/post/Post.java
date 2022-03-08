@@ -17,7 +17,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import site.metacoding.dbproject.domain.user.User;
 
@@ -29,7 +29,7 @@ import site.metacoding.dbproject.domain.user.User;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
+@Data
 @Entity
 @EntityListeners(AuditingEntityListener.class) // 현재시간 입력을 위해 필요한 어노테이션
 public class Post {
