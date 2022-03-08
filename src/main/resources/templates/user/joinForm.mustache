@@ -6,11 +6,9 @@
     <!-- 회원가입 폼 시작 -->
     <form action="/join" method="post">
       <div class="mb-3 mt-3">
-          <input type="text" class="form-control" placeholder="Enter username" name="username">
           <input type="text" class="form-control" placeholder="Enter username" name="username" required>
       </div>
       <div class="mb-3">
-          <input type="password" class="form-control" placeholder="Enter password" name="password">
           <input type="password" class="form-control" placeholder="Enter password" name="password" required
               maxlength="12">
       </div>
@@ -20,6 +18,7 @@
       <button type="submit" class="btn btn-dark">회원가입</button>
   </form>
   <!-- 회원가입 폼 끝 -->
+  
 </div>
 <!-- 컨테이너 끝 -->
 {{> /layout/footer}}
