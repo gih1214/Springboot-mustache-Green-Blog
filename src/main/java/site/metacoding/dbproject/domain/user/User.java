@@ -48,4 +48,5 @@ public class User {
     private LocalDateTime createDate;
     @LastModifiedDate // insert, update
     private LocalDateTime updateDate;
+
 }
