@@ -34,11 +34,22 @@ public class UserController {
         return "user/joinForm";
     }
 
+    // username=ssar&password=&email=ssar@nate.com 패스워드 공백
+    // username=ssar&email=ssar@nate.com 패스워드 null
     // username=ssar&password=1234&email=ssar@nate.com (x-www-form)
     // 회원가입 (페이지가 아니라 액션을 주는 것 - 회원가입 수행) - 로그인X
     @PostMapping("/join")
     public String join(User user) {
-        System.out.println("user : " + user);
+
+        // 1. username, password, email - 1. null체크, 2. 공백체크
+        if (user.getUsername() == null || user.getPassword() == null || user.getEmail() == null) {
+            return "redirect:/joinForm";
+        }
+        if (user.getUsername().equals("") || user.getPassword().equals("") || user.getEmail().equals("")) {
+            return "redirect:/joinForm";
+        }
+
+        // 2. 핵심로직
         User userEntity = userRepository.save(user);
         System.out.println("userEntity : " + userEntity);
         // redirect:매핑주소
