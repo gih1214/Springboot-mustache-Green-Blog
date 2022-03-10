@@ -55,6 +55,7 @@ public class PostController {
         if (postOp.isPresent()) {
             Post postEntity = postOp.get();
             model.addAttribute("post", postEntity);
+            System.out.println("============================");
             return "post/detail";
         } else {
             return "error/page1";
@@ -96,5 +97,4 @@ public class PostController {
         postRepository.save(post);
         return "redirect:/";
     }
-
 }
