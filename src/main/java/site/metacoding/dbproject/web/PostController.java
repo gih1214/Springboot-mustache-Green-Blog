@@ -61,14 +61,26 @@ public class PostController {
     @GetMapping("/post/{id}") // Get 요청에 /post 제외 시키기
     public String detail(@PathVariable Integer id, Model model) {
 
+        User principal = (User) session.getAttribute("principal");
+
         Post postEntity = postService.글상세보기(id);
 
+        // 게시물이 없으면 error 페이지 이동
         if (postEntity == null) {
             return "error/page1";
-        } else {
-            model.addAttribute("post", postEntity);
-            return "post/detail";
         }
+
+        if (principal != null) {
+            // 권한 확인해서 view로 값 넘김
+            if (principal.getId() == postEntity.getUser().getId()) { // 권한이 있다는 뜻
+                model.addAttribute("pageOwner", true);
+            } else {
+                model.addAttribute("pageOwner", false);
+            }
+        }
+
+        model.addAttribute("post", postEntity);
+        return "post/detail";
     }
 
     // 글 수정 페이지 /post/{id}/updateForm - 인증 O
@@ -84,9 +96,11 @@ public class PostController {
         // 인증과 권한체크
         // 1. 인증 (세션필요)
         User principal = (User) session.getAttribute("principal");
+
         if (principal == null) { // 로그인이 안됐다는 뜻
             return new ResponseDto<String>(-1, "로그인이 되지 않았습니다.", null);
         }
+
         // 2. 권한
         Post postEntity = postService.글상세보기(id);
         if (principal.getId() != postEntity.getUser().getId()) { // 권한이 없다는 뜻
