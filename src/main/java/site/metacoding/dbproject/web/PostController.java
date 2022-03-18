@@ -64,7 +64,7 @@ public class PostController {
 
         User principal = (User) session.getAttribute("principal");
 
-        Post postEntity = postService.글상세보기(id);
+        Post postEntity = postService.글상세보기(id); // 핵심로직
 
         // 게시물이 없으면 error 페이지 이동
         if (postEntity == null) {
@@ -80,7 +80,12 @@ public class PostController {
             }
         }
 
-        model.addAttribute("post", postEntity);
+        // 자바스크립트 공격 막기
+        String rawContent = postEntity.getContent();
+        String encContent = rawContent.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+        postEntity.setContent(encContent);
+
+        model.addAttribute("post", postEntity); // 핵심로직
         return "post/detail";
     }
 
