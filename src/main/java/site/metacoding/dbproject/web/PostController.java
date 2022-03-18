@@ -82,7 +82,9 @@ public class PostController {
 
         // 자바스크립트 공격 막기
         String rawContent = postEntity.getContent();
-        String encContent = rawContent.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+        String encContent = rawContent
+                .replaceAll("<script>", "&lt;script&gt;")
+                .replaceAll("</script>", "&lt;script/&gt;");
         postEntity.setContent(encContent);
 
         model.addAttribute("post", postEntity); // 핵심로직
