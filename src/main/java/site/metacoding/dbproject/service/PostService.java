@@ -36,9 +36,16 @@ public class PostService {
     }
 
     @Transactional
-    public void 글수정하기() {
+    public void 글수정하기(Post post, Integer id) {
 
-    } // 메서드가 종료되면 commit 된다. (한번에 commit)
+        Optional<Post> postOp = postRepository.findById(id);
+
+        if (postOp.isPresent()) {
+            Post postEntity = postOp.get();
+            postEntity.setTitle(post.getTitle());
+            postEntity.setContent(post.getContent());
+        }
+    } // 더티체킹 완료 (수정됨), 메서드가 종료되면 commit 된다. (한번에 commit)
 
     @Transactional
     public void 글삭제하기(Integer id) {

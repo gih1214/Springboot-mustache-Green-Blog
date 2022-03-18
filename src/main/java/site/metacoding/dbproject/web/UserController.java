@@ -122,7 +122,7 @@ public class UserController {
 
         // 2. 권한 체크
         if (principal.getId() != id) {
-            return "error/page1";
+            return "error/page1"; // http 상태코드 403을 함께 리턴해줘야 한다!!
         }
 
         User userEntity = userService.유저정보보기(id);
