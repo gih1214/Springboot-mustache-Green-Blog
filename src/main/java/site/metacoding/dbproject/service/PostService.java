@@ -41,8 +41,8 @@ public class PostService {
     } // 메서드가 종료되면 commit 된다. (한번에 commit)
 
     @Transactional
-    public void 글삭제하기() {
-
+    public void 글삭제하기(Integer id) {
+        postRepository.deleteById(id); // 실패했을 때 내부적으로 exception 터짐
     }
 
     @Transactional
